@@ -4,7 +4,7 @@ import matplotlib.pyplot as plt
 
 def analytical_heat(t, y):  
     sum = 0  
-    for n in range(1, 31):  
+    for n in range(1, 201):  
         sum += (1 / n) * (22 * (-1)**n - 3) * math.exp(-((math.pi * n / 0.01)**2) * 0.34e-6 * t) * math.sin(((math.pi * n / 0.01) * y))  
     return 1900 * y + 3 + (2 / math.pi) * sum  
 
@@ -61,23 +61,24 @@ for ti in t:
 
 analytical_result = np.array(analytical_result)
 
-def plot_heat(result, title):
-    t = np.arange(0, T + h, h)
-    y = np.arange(N)
-    T_plot, Y = np.meshgrid(t, y, indexing="ij")
-    Z = result
-    fig = plt.figure(figsize=(20, 15))
-    ax = fig.add_subplot(121, projection='3d')
-    ax.plot_surface(T_plot, Y, Z, cmap='viridis', edgecolor='k')
-    ax.set_xlabel('Час, t')
-    ax.set_ylabel('y, внутрішні точки')
-    ax.set_zlabel('t°C')
-    ax.set_title(title)
-    plt.grid(True) 
-    plt.show()
-
-plot_heat(numeric_result, "Чисельний розв'язок")
-plot_heat(analytical_result, "Аналітичний розв'язок")
+t = np.arange(0, T + h, h)
+y = np.arange(N)
+T_plot, Y = np.meshgrid(t, y, indexing="ij")
+fig = plt.figure(figsize=(15, 10))
+ax1 = fig.add_subplot(121, projection='3d')
+ax1.plot_surface(T_plot, Y, numeric_result, cmap='viridis', edgecolor='k')
+ax1.set_xlabel('Час, год.')
+ax1.set_ylabel('y координата')
+ax1.set_zlabel('t°C')
+ax1.set_title("Чисельний розв'язок")
+ax2 = fig.add_subplot(122, projection='3d')
+ax2.plot_surface(T_plot, Y, analytical_result, cmap='viridis', edgecolor='k')
+ax2.set_xlabel('Час, год.')
+ax2.set_ylabel('y координата')
+ax2.set_zlabel('t°C')
+ax2.set_title("Аналітичний розв'язок")
+plt.grid(True) 
+plt.show()
 
 mae = np.max(np.absolute(analytical_result - numeric_result))
 
